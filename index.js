@@ -1,4 +1,5 @@
 var http =  require('http');
+var chatServer = require('./lib/chat_server');
 var fs = require('fs');
 var path = require('path');
 var mime = require('mime');
@@ -13,7 +14,7 @@ function send404(res){
 function sendFile(res, filePath, fileContents){
     res.writeHead(
         200,
-        {"constent-type": mime.lookup(path.basename(filePath))}
+        {"constent-type": mime.getType(path.basename(filePath))}
     );
     res.end(fileContents);
 }
@@ -24,7 +25,7 @@ function serveStatic(res, cache, absPath){
     } else{
         fs.exists(absPath, (exists)=> {
             if(exists){
-                fs.readDile(absPath, function(err, data){
+                fs.readFile(absPath, function(err, data){
                     if(err){
                         send404(res);
                     }
